@@ -13,8 +13,9 @@ class Game {
     this.board = [];
     this.height = height;
     this.width = width;
-    this.makeBoard();
-    this.makeHtmlBoard();
+    //this.makeBoard();
+    //this.makeHtmlBoard();
+    this.makeStartButton();
   }
 
   /** makeBoard: create in-JS board structure:
@@ -22,6 +23,7 @@ class Game {
    */
 
   makeBoard() {
+    this.board = [];
     for (let y = 0; y < this.height; y++) {
       this.board.push(Array.from({ length: this.width }));
     }
@@ -65,6 +67,20 @@ class Game {
     }
   }
 
+  /**makeStartButton: creates button to add to game dom */
+
+  makeStartButton(){
+
+    const button = document.createElement("button");
+    button.setAttribute("id", "start");
+    button.addEventListener("click", this.makeHtmlBoard.bind(this));
+    button.addEventListener("click", this.makeBoard.bind(this));
+
+    const game = document.getElementById("start-game");
+    game.append(button);
+
+  }
+
   /** findSpotForCol: given column x, return top empty y (null if filled) */
 
   findSpotForCol(x) {
@@ -93,6 +109,9 @@ class Game {
 
   endGame(msg) {
     alert(msg);
+    const columnTop = document.getElementById("column-top");
+    columnTop.removeEventListener('click', this.handleClick);
+    //new Game(6, 7);
   }
 
   /** handleClick: handle click of column top to play piece */
@@ -185,7 +204,15 @@ class Game {
   }
 }
 
-// new Game(6, 7);
+class Player{
+  constructor(color){
+    this.color=color;
+  }
+}
+
+
+
+new Game(6, 7);
 
 // const WIDTH = 7;
 // const HEIGHT = 6;
