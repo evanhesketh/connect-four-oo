@@ -13,6 +13,7 @@ class Game {
     this.width = width;
     this.makeBoard();
     this.makeHtmlBoard();
+    
     // this.placeInTable();
     // this.handleClick(this);
   }
@@ -35,7 +36,7 @@ makeHtmlBoard() {
   // make column tops (clickable area for adding a piece to that column)
   const top = document.createElement('tr');
   top.setAttribute('id', 'column-top');
-  top.addEventListener('click', handleClick);
+  top.addEventListener('click', this.handleClick.bind(this));
 
   for (let x = 0; x < this.width; x++) {
     const headCell = document.createElement('td');
@@ -73,12 +74,13 @@ findSpotForCol(x) {
 /** placeInTable: update DOM to place piece into HTML table of board */
 
 placeInTable(y, x) {
+  console.log("hi");
   const piece = document.createElement('div');
   piece.classList.add('piece');
   piece.classList.add(`p${this.currPlayer}`);
   piece.style.top = -50 * (y + 2);
 
-  const spot = document.getElementById(`$c-${y}-${x}`);
+  const spot = document.getElementById(`c-${y}-${x}`);
   spot.append(piece);
 }
 
@@ -92,10 +94,14 @@ placeInTable(y, x) {
 
 handleClick(evt) {
   // get x from ID of clicked cell
+  //this.handleClick = this.handleClick.bind(this);
   const x = +evt.target.id;
+  //const x = Number(evt.target.id.slice("top-".length));
+  
 
   // get next spot in column (if none, ignore click)
   const y = this.findSpotForCol(x);
+  
   if (y === null) {
     return;
   }
@@ -120,8 +126,8 @@ handleClick(evt) {
 
 /** checkForWin: check board cell-by-cell for "does a win start here?" */
 
-checkForWin() {
-  function _win(cells) {
+checkForWin() { 
+  const _win = (cells) =>{ //as arrow function
     // Check four cells to see if they're all color of current player
     //  - cells: list of four (y, x) cells
     //  - returns true if all are legal coordinates & all match currPlayer
@@ -146,7 +152,7 @@ checkForWin() {
       const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
 
       // find winner (only checking each win-possibility as needed)
-      if (this._win(horiz) || this._win(vert) || this._win(diagDR) || this._win(diagDL)) {
+      if (_win(horiz) || _win(vert) || _win(diagDR) || _win(diagDL)) {
         return true;
       }
     }
